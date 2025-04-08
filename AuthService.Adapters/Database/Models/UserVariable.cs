@@ -1,6 +1,6 @@
 ﻿namespace AuthService.Adapters.Database.Models
 {
-    public class UserPermission : AbstractPermission
+    public class UserVariable : AbstractVariable
     {
         public User User { get; set; } = default!;
     }
