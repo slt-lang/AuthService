@@ -26,9 +26,9 @@ namespace AuthService.Adapters.Database
                 e.Property(e => e.Username).IsRequired().IsUnicode(false).HasMaxLength(64);
                 e.Property(e => e.PasswordHash).IsRequired(false).IsUnicode(false).HasMaxLength(256);
                 e.Property(e => e.RegisterDate).IsRequired().HasDefaultValueSql(DateTimeNowSqlFunction);
-                e.Property(e => e.InvitedBy).IsRequired(false);
+                //e.Property(e => e.InvitedBy).IsRequired(false);
 
-                e.HasOne(e => e.InvitedBy).WithOne();
+                //e.HasOne(e => e.InvitedBy).WithOne();
                 e.HasMany(e => e.Variables).WithOne(e => e.User);
                 e.HasMany(e => e.Permissions).WithOne(e => e.User);
             });
