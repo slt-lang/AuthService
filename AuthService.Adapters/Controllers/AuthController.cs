@@ -1,17 +1,11 @@
-using AuthService.Adapters.Database.Models;
 using AuthService.Adapters.Extensions;
 using AuthService.Domain;
 using AuthService.Domain.Ports;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
+using sltlang.Common.AuthService.Contracts;
 using sltlang.Common.AuthService.Dto;
 using sltlang.Common.AuthService.Enums;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using LoginRequest = sltlang.Common.AuthService.Contracts.LoginRequest;
 
 namespace AuthService.Controllers
 {
@@ -19,17 +13,6 @@ namespace AuthService.Controllers
     [Route("/")]
     public class AuthController(IAuthDb authDb, Config config) : ControllerBase
     {
-        //todo move to Contracts
-        public class LoginRequest
-        {
-            public string Username { get; set; }
-            public string Password { get; set; }
-        }
-        public class LoginResponse
-        {
-            public string AccessToken { get; set; }
-        }
-
         [HttpPost("login")]
         public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest request)
         {
@@ -45,6 +28,10 @@ namespace AuthService.Controllers
                 Permissions = new Dictionary<Permission, PermissionDto>()
                 {
                     { Permission.RootPermission, new PermissionDto() }
+                },
+                Variables = new Dictionary<Variable, object>()
+                {
+                    { Variable.MaxLinkTTL, 60 },
                 }
             };
 
@@ -54,7 +41,7 @@ namespace AuthService.Controllers
             }
 
             // Verify the password
-            if (user.Username != request.Username && request.Password != user.Password)
+            if (user.Username != request.Username || request.Password != user.Password)
             {
                 return Unauthorized("Invalid username or password.");
             }

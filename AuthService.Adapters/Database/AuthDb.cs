@@ -18,10 +18,10 @@ namespace AuthService.Adapters.Database
             {
                 Id = 0,
                 Username = "root",
-                Permissions = new UserPermission[]
-                {
-                    new UserPermission(){PermissionId = sltlang.Common.AuthService.Enums.Permission.RootPermission}
-                },
+                Permissions =
+                [
+                    new(){PermissionId = sltlang.Common.AuthService.Enums.Permission.RootPermission}
+                ],
                 PasswordHash = "x",
                 Enabled = true,
             };

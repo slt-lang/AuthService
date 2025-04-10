@@ -1,4 +1,6 @@
-﻿namespace AuthService.Domain
+﻿using sltlang.Common.AuthService.Models;
+
+namespace AuthService.Domain
 {
     public class Config
     {

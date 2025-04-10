@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using sltlang.Common.Common.Extensions;
 
 namespace AuthService.Domain.Extensions
 {
@@ -27,15 +28,8 @@ namespace AuthService.Domain.Extensions
                 Permissions = user.Permissions?.ToDictionary(x => x.PermissionId, x => x.ToPermissionDto()),
                 RegistrationDate = user.RegisterDate,
                 Username = user.Username,
-                Variables = user.Variables?.ToDictionary(x => x.Name, x => x.Value != null ? JsonSerializer.Deserialize(x.Value, x.Name.GetVariableType()) : null),
+                Variables = user.Variables?.ToDictionary(x => x.Name, x => x.Value != null ? JsonSerializer.Deserialize(x.Value, x.Name.GetEnumComponentType()) : null),
             };
-        }
-
-        private static ConcurrentDictionary<Variable, Type> variableTypes = new ConcurrentDictionary<Variable, Type>(typeof(Variable).GetFields(BindingFlags.Static | BindingFlags.Public).Select(x => new KeyValuePair<Variable, Type>((Variable)x.GetRawConstantValue(), x.GetCustomAttribute<ComponentTypeAttribute>().Type)));
-        // todo перенести в sltlang.Common
-        public static Type GetVariableType(this Variable variable)
-        {
-            return variableTypes[variable];
         }
 
         public static PermissionDto ToPermissionDto(this AbstractPermission permission)
@@ -43,10 +37,9 @@ namespace AuthService.Domain.Extensions
             return new PermissionDto()
             {
                 CreateDate = permission.CreateDate,
-                //EndDate = permission.EndDate, //todo
+                EndDate = permission.EndDate,
                 Id = permission.Id,
-                IsAllowInheritance = permission.AllowInheritance,
-                //IsTemporary = permission.IsTemporary,
+                AllowInheritance = permission.AllowInheritance,
                 Permission = permission.PermissionId,
             };
         }

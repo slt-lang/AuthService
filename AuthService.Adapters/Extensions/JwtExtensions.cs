@@ -1,6 +1,10 @@
 ﻿using AuthService.Domain;
 using Microsoft.IdentityModel.Tokens;
 using sltlang.Common.AuthService.Dto;
+using sltlang.Common.AuthService.Enums;
+using sltlang.Common.AuthService.Models;
+using sltlang.Common.Common.Extensions;
+using System.ComponentModel;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -20,6 +24,21 @@ namespace AuthService.Adapters.Extensions
             foreach (var permission in user.Permissions)
             {
                 claims.Add(new Claim("Permission", permission.Key.ToString()));
+            }
+
+            foreach (var variable in EnumExtensions.EnumHelper<Variable>.Values)
+            {
+                if (user.Variables.ContainsKey(variable))
+                {
+                    claims.Add(new Claim("Variable", user.Variables[variable].SerializeByEnum(variable), variable.ToString()));
+                }
+                else if (variable.HasAttribute<Variable, AlwaysTranfsferAttribute>())
+                {
+                    var value = variable.HasAttribute<Variable, DefaultValueAttribute>()
+                        ? EnumExtensions.EnumHelper<Variable>.AttributeHelper<DefaultValueAttribute>.With(variable, x => x!.Value)
+                        : null;
+                    claims.Add(new Claim("Variable", value?.SerializeByEnum(variable) ?? "null", variable.ToString()));
+                }
             }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.Secret));
