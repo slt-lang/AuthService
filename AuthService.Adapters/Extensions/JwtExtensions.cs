@@ -30,14 +30,14 @@ namespace AuthService.Adapters.Extensions
             {
                 if (user.Variables.ContainsKey(variable))
                 {
-                    claims.Add(new Claim("Variable", user.Variables[variable].SerializeByEnum(variable), variable.ToString()));
+                    claims.Add(new Claim("Variable+" + variable.ToString(), user.Variables[variable].SerializeByEnum(variable)));
                 }
                 else if (variable.HasAttribute<Variable, AlwaysTranfsferAttribute>())
                 {
                     var value = variable.HasAttribute<Variable, DefaultValueAttribute>()
                         ? EnumExtensions.EnumHelper<Variable>.AttributeHelper<DefaultValueAttribute>.With(variable, x => x!.Value)
                         : null;
-                    claims.Add(new Claim("Variable", value?.SerializeByEnum(variable) ?? "null", variable.ToString()));
+                    claims.Add(new Claim("Variable+" + variable.ToString(), value?.SerializeByEnum(variable) ?? "null"));
                 }
             }
 

@@ -32,6 +32,7 @@ namespace AuthService.Controllers
                 Variables = new Dictionary<Variable, object>()
                 {
                     { Variable.MaxLinkTTL, 60 },
+                    { Variable.DisplayName, "ROOT" }
                 }
             };
 
