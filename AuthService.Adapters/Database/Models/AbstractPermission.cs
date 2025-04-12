@@ -9,5 +9,7 @@ namespace AuthService.Adapters.Database.Models
         public DateTime CreateDate { get; set; }
         public DateTime? EndDate { get; set; }
         public bool AllowInheritance { get; set; }
+
+        public virtual RefPermission RefPermission { get; set; } = default!;
     }
 }

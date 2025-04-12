@@ -1,2 +1,2 @@
-dotnet ef migrations add M1 --project "AuthService.Adapters/AuthService.Adapters.csproj" --context "AuthService.Adapters.Database.ArticleServiceContext" --startup-project "AuthService/AuthService.csproj"
-dotnet ef database update 0 --project "AuthService.Adapters/AuthService.Adapters.csproj" --context "AuthService.Adapters.Database.ArticleServiceContext" --startup-project "AuthService/AuthService.csproj"
+dotnet ef migrations add M1 --project "AuthService.Adapters/AuthService.Adapters.csproj" --context "AuthService.Adapters.Database.AuthServiceContext" --startup-project "AuthService/AuthService.csproj"
+dotnet ef database update 0 --project "AuthService.Adapters/AuthService.Adapters.csproj" --context "AuthService.Adapters.Database.AuthServiceContext" --startup-project "AuthService/AuthService.csproj"

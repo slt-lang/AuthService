@@ -3,8 +3,11 @@ using AuthService.Domain;
 using AuthService.Domain.Logic;
 using AuthService.Domain.Ports;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using sltlang.Common.AuthService.Enums;
+using sltlang.Common.Common.Extensions;
 using System.Text;
 
 namespace AuthService
@@ -19,6 +22,7 @@ namespace AuthService
             builder.Services.AddTransient<IAuthDb, AuthDb>();
             builder.Services.AddTransient<IDateTime, DateTimeProvider>();
             builder.Services.AddMemoryCache();
+            builder.Services.AddScoped(typeof(IPasswordHasher<>), typeof(PasswordHasher<>));
 
             var configuration = builder.Configuration.GetSection("Config").Get<Config>();
             builder.Services.AddSingleton(configuration ?? new());

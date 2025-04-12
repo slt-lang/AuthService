@@ -17,6 +17,18 @@ namespace AuthService.Domain.Extensions
 {
     public static class DtoExtensions
     {
+        public static ShortUserDto ToShortUserDto(this User user, bool password = false)
+        {
+            return new ShortUserDto()
+            {
+                Enabled = user.Enabled,
+                Id = user.Id,
+                IsTemplate = user.IsTemplate,
+                Password = password ? user.PasswordHash : null,
+                Username = user.Username,
+            };
+        }
+
         public static UserDto ToUserDto(this User user, bool password = false)
         {
             return new UserDto()
@@ -25,10 +37,11 @@ namespace AuthService.Domain.Extensions
                 Id = user.Id,
                 IsTemplate = user.IsTemplate,
                 Password = password ? user.PasswordHash : null,
-                Permissions = user.Permissions?.ToDictionary(x => x.PermissionId, x => x.ToPermissionDto()),
+                Permissions = user.Permissions?.ToDictionary(x => x.PermissionId, x => x.ToPermissionDto())!,
                 RegistrationDate = user.RegisterDate,
                 Username = user.Username,
-                Variables = user.Variables?.ToDictionary(x => x.Name, x => x.Value != null ? JsonSerializer.Deserialize(x.Value, x.Name.GetEnumComponentType()) : null),
+                Variables = user.Variables?.ToDictionary(x => x.Name, x => x.Value)!,
+                InvitedBy = user.ToShortUserDto(),
             };
         }
 

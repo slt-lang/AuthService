@@ -23,7 +23,8 @@ namespace AuthService.Adapters.Extensions
 
             foreach (var permission in user.Permissions)
             {
-                claims.Add(new Claim("Permission", permission.Key.ToString()));
+                if (!permission.Value.EndDate.HasValue || permission.Value.EndDate.Value < DateTime.Now)
+                    claims.Add(new Claim("Permission", permission.Key.ToString()));
             }
 
             foreach (var variable in EnumExtensions.EnumHelper<Variable>.Values)

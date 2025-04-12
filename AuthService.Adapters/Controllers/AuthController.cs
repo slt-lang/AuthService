@@ -1,6 +1,7 @@
 using AuthService.Adapters.Extensions;
 using AuthService.Domain;
 using AuthService.Domain.Ports;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using sltlang.Common.AuthService.Contracts;
 using sltlang.Common.AuthService.Dto;
@@ -11,7 +12,7 @@ namespace AuthService.Controllers
 {
     [ApiController]
     [Route("/")]
-    public class AuthController(IAuthDb authDb, Config config) : ControllerBase
+    public class AuthController(IAuthDb authDb, Config config, IPasswordHasher<string> passwordHasher) : ControllerBase
     {
         [HttpPost("login")]
         public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest request)
@@ -21,28 +22,14 @@ namespace AuthService.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new UserDto()
-            {
-                Username = "root",
-                Password = "x",
-                Permissions = new Dictionary<Permission, PermissionDto>()
-                {
-                    { Permission.RootPermission, new PermissionDto() }
-                },
-                Variables = new Dictionary<Variable, object>()
-                {
-                    { Variable.MaxLinkTTL, 60 },
-                    { Variable.DisplayName, "ROOT" }
-                }
-            };
+            var user = await authDb.GetUser(request.Username, true);
 
-            if (user == null)
+            if (user == null || user.IsTemplate)
             {
                 return Unauthorized("Invalid username or password.");
             }
 
-            // Verify the password
-            if (user.Username != request.Username || request.Password != user.Password)
+            if (user.Password == null || passwordHasher.VerifyHashedPassword(null!, user.Password, request.Password) == PasswordVerificationResult.Failed)
             {
                 return Unauthorized("Invalid username or password.");
             }

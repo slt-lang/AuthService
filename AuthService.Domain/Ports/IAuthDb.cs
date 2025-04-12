@@ -1,14 +1,14 @@
-﻿using sltlang.Common.AuthService.Dto;
+﻿using sltlang.Common.AuthService.Contracts;
+using sltlang.Common.AuthService.Dto;
 
 namespace AuthService.Domain.Ports
 {
     public interface IAuthDb
     {
-        public Task<UserDto[]> GetTemplateUsers(int userId);
-        public Task<InviteLinkDto> CreateInviteLink(int userId, InviteLinkDto linkDto);
-        public Task<bool> HasInviteLink(string path);
-        public Task<bool> DeleteInviteLink(int userId, string path);
-        public Task<UserDto> GetUser(string username);
-        public Task<UserDto> GetUser(int userId);
+        Task<CreateUserResult> CreateUser(UserDto userDto);
+        Task<UserDto?> GetUser(int userId, bool password = false);
+        Task<UserDto?> GetUser(string username, bool password = false);
+        Task<ShortUserDto?> GetShortUser(string username, bool password = false);
+        Task<IList<UserDto>> GetTemplateUsers();
     }
 }
