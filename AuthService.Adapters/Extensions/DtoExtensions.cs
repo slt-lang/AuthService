@@ -13,7 +13,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using sltlang.Common.Common.Extensions;
 
-namespace AuthService.Domain.Extensions
+namespace AuthService.Adapters.Extensions
 {
     public static class DtoExtensions
     {
@@ -42,6 +42,7 @@ namespace AuthService.Domain.Extensions
                 Username = user.Username,
                 Variables = user.Variables?.ToDictionary(x => x.Name, x => x.Value)!,
                 InvitedBy = user.ToShortUserDto(),
+                InviteLinks = user.Invites?.Select(x => x.ToShortInviteLinkDto()).ToArray()!,
             };
         }
 
@@ -54,6 +55,34 @@ namespace AuthService.Domain.Extensions
                 Id = permission.Id,
                 AllowInheritance = permission.AllowInheritance,
                 Permission = permission.PermissionId,
+            };
+        }
+
+        public static ShortInviteLinkDto ToShortInviteLinkDto(this Invite invite)
+        {
+            return new ShortInviteLinkDto()
+            {
+                InheritanceUserId = invite.InheritanceUserId,
+                TemplateUsername = invite.InheritanceUser?.Username,
+                Link = invite.Link,
+                LinkId = invite.Id,
+                Ttl = invite.Ttl,
+                UserId = invite.UserId,
+            };
+        }
+
+        public static InviteLinkDto ToInviteLinkDto(this Invite invite)
+        {
+            return new InviteLinkDto()
+            {
+                InheritanceUserId = invite.InheritanceUserId,
+                TemplateUsername = invite.InheritanceUser?.Username,
+                Link = invite.Link,
+                LinkId = invite.Id,
+                Ttl = invite.Ttl,
+                UserId = invite.UserId,
+                Permissions = invite.Permissions?.Select(x => x.ToPermissionDto()).ToList()!,
+                Variables = invite.Variables?.ToDictionary(x => x.Name, x => x.Value)!,
             };
         }
     }

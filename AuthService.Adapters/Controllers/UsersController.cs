@@ -28,7 +28,7 @@ namespace AuthService.Adapters.Controllers
         }
 
         [HttpGet("get/{userId}")]
-        public async Task<ActionResult<CreateUserResult>> Get(int userId)
+        public async Task<ActionResult<UserDto>> Get(int userId)
         {
             var result = await authDb.GetUser(userId);
             if (result != null)

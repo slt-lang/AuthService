@@ -3,6 +3,7 @@ using AuthService.Domain;
 using AuthService.Domain.Ports;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using sltlang.Common.AuthService.Contracts;
 using sltlang.Common.AuthService.Dto;
 using sltlang.Common.AuthService.Enums;
@@ -22,7 +23,7 @@ namespace AuthService.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = await authDb.GetUser(request.Username, true);
+            var user = await authDb.GetUserForAuth(request.Username, true);
 
             if (user == null || user.IsTemplate)
             {
@@ -36,6 +37,33 @@ namespace AuthService.Controllers
 
             var token = user.GenerateJwtToken(config.JwtSettings);
             return Ok(new LoginResponse(){ AccessToken = token });
+        }
+
+        [HttpPost("register")]
+        public async Task<ActionResult<RegistrationResponse>> Register([FromBody] RegistrationRequest request)
+        {
+            if (request.Password != request.PasswordConfirm)
+                return BadRequest();
+
+            request.Password = passwordHasher.HashPassword(null!, request.Password);
+
+            var inviteExisted = await authDb.InviteExisted(request.Invite);
+            if (!inviteExisted)
+            {
+                return BadRequest();
+            }
+
+            var registered = await authDb.RegisterUser(request);
+            
+            if (registered == null)
+            {
+                return BadRequest();
+            }
+
+            registered.User.Password = null;
+            registered.AccessToken = registered.User.GenerateJwtToken(config.JwtSettings);
+
+            return Ok(registered);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace AuthService.Adapters.Extensions
             {
                 if (user.Variables.ContainsKey(variable))
                 {
-                    claims.Add(new Claim("Variable+" + variable.ToString(), user.Variables[variable].SerializeByEnum(variable)));
+                    claims.Add(new Claim("Variable+" + variable.ToString(), user.Variables[variable]));
                 }
                 else if (variable.HasAttribute<Variable, AlwaysTranfsferAttribute>())
                 {
