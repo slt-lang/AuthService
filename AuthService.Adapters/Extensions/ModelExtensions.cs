@@ -1,4 +1,6 @@
 ﻿using AuthService.Adapters.Database.Models;
+using sltlang.Common.AuthService.Dto;
+using sltlang.Common.AuthService.Enums;
 
 namespace AuthService.Adapters.Extensions
 {
@@ -17,6 +19,19 @@ namespace AuthService.Adapters.Extensions
             };
         }
 
+        public static T ToConcretePermission<T>(this PermissionDto permission, Action<T> addition = null!) where T : AbstractPermission, new()
+        {
+            var ret = new T()
+            {
+                CreateDate = permission.CreateDate.ToUniversalTime(),
+                EndDate = permission.EndDate?.ToUniversalTime(),
+                AllowInheritance = permission.AllowInheritance,
+                PermissionId = permission.Permission,
+            };
+            addition?.Invoke(ret);
+            return ret;
+        }
+
         public static T ToConcreteVariable<T>(this AbstractVariable variable) where T : AbstractVariable, new()
         {
             return new T()
@@ -26,6 +41,17 @@ namespace AuthService.Adapters.Extensions
                 RefVariable = variable.RefVariable,
                 Value = variable.Value,
             };
+        }
+
+        public static T ToConcreteVariable<T>(this KeyValuePair<Variable, string> variable, Action<T> addition = null!) where T : AbstractVariable, new()
+        {
+            var ret = new T()
+            {
+                Name = variable.Key,
+                Value = variable.Value,
+            };
+            addition?.Invoke(ret);
+            return ret;
         }
     }
 }

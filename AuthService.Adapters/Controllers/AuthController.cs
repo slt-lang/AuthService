@@ -23,7 +23,7 @@ namespace AuthService.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = await authDb.GetUserForAuth(request.Username, true);
+            var user = await authDb.GetUserForAuth(request.Login, true);
 
             if (user == null || user.IsTemplate)
             {

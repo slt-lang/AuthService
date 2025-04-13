@@ -12,6 +12,6 @@ namespace AuthService.Domain.Ports
         Task<UserDto?> GetUserForAuth(string username, bool password = false);
         Task<bool> InviteExisted(string invite);
         Task<RegistrationResponse?> RegisterUser(RegistrationRequest request);
-        Task<CreateInviteResult> CreateInvite(InviteLinkDto request);
+        Task<CreateInviteLinkResponse> CreateInvite(InviteLinkDto request);
     }
 }

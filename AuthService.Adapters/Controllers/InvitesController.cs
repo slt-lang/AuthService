@@ -11,10 +11,10 @@ namespace AuthService.Adapters.Controllers
     public class InvitesController(IAuthDb authDb, Config config) : ControllerBase
     {
         [HttpPost("new")]
-        public async Task<ActionResult<CreateInviteResult>> Create(InviteLinkDto request)
+        public async Task<ActionResult<CreateInviteLinkResponse>> Create(InviteLinkDto request)
         {
             var result = await authDb.CreateInvite(request);
-            return result;
+            return Ok(result);
         }
     }
 }

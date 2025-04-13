@@ -38,7 +38,7 @@ namespace AuthService.Adapters.Extensions
                 IsTemplate = user.IsTemplate,
                 Password = password ? user.PasswordHash : null,
                 Permissions = user.Permissions?.ToDictionary(x => x.PermissionId, x => x.ToPermissionDto())!,
-                RegistrationDate = user.RegisterDate,
+                RegistrationDate = user.RegisterDate.ToLocalTime(),
                 Username = user.Username,
                 Variables = user.Variables?.ToDictionary(x => x.Name, x => x.Value)!,
                 InvitedBy = user.ToShortUserDto(),
@@ -50,8 +50,8 @@ namespace AuthService.Adapters.Extensions
         {
             return new PermissionDto()
             {
-                CreateDate = permission.CreateDate,
-                EndDate = permission.EndDate,
+                CreateDate = permission.CreateDate.ToLocalTime(),
+                EndDate = permission.EndDate?.ToLocalTime(),
                 Id = permission.Id,
                 AllowInheritance = permission.AllowInheritance,
                 Permission = permission.PermissionId,
@@ -66,7 +66,7 @@ namespace AuthService.Adapters.Extensions
                 TemplateUsername = invite.InheritanceUser?.Username,
                 Link = invite.Link,
                 LinkId = invite.Id,
-                Ttl = invite.Ttl,
+                Ttl = invite.Ttl.ToLocalTime(),
                 UserId = invite.UserId,
             };
         }
