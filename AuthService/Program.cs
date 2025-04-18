@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using sltlang.Common.AuthService.Enums;
+using sltlang.Common.Common;
 using sltlang.Common.Common.Extensions;
 using System.Text;
 
@@ -61,6 +62,7 @@ namespace AuthService
 
             app.UseAuthorization();
 
+            app.MapGet("/serviceinfo", () => ServiceInfo.GetServiceInfo(typeof(Program).Assembly)).WithGroupName("Service");
 
             app.MapControllers();
 
