@@ -135,7 +135,7 @@ namespace AuthService.Adapters.Database
                 e.Property(e => e.Enabled).IsRequired(true);
                 e.Property(e => e.IsTemplate).IsRequired(true);
 
-                e.HasOne(e => e.InvitedBy).WithOne().HasForeignKey<User>(e => e.InvitedById);
+                e.HasMany(e => e.InvitedUsers).WithOne(e => e.InvitedBy).HasForeignKey(e => e.InvitedById);
 
                 e.HasIndex(e => e.Username);
             });

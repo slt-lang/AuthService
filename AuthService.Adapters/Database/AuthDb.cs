@@ -130,6 +130,16 @@ namespace AuthService.Adapters.Database
 
                     var templateUser = invite.InheritanceUser?.IsTemplate ?? false ? invite.InheritanceUser.ToShortUserDto() : null;
 
+                    if (!string.IsNullOrEmpty(request.DisplayName))
+                    {
+                        variables.RemoveAll(x => x.Name == Variable.DisplayName);
+                        variables.Add(new UserVariable()
+                        {
+                            Name = Variable.DisplayName,
+                            Value = $"\"{request.DisplayName}\"",
+                        });
+                    }
+
                     var newUser = new User()
                     {
                         Username = request.Login,

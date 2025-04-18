@@ -15,5 +15,6 @@
         public virtual ICollection<UserVariable> Variables { get; set; } = default!;
         public virtual ICollection<Invite> Invites { get; set; } = default!;
         public virtual ICollection<Invite> InheritedInvites { get; set; } = default!;
+        public virtual ICollection<User> InvitedUsers { get; set; } = default!;
     }
 }
