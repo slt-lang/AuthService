@@ -259,5 +259,21 @@ namespace AuthService.Adapters.Database
             }
             return new CreateInviteLinkResponse() { Result = CreateInviteResult.UnknownError };
         }
+
+        public async Task<int?> DeleteExpiredInvites()
+        {
+            using (var tran = await db.Database.BeginTransactionAsync())
+            {
+                var entities = await db.Invites.Where(x => x.Ttl < dateTime.UtcNow).ToListAsync();
+
+                var ret = entities.Count;
+
+                db.RemoveRange(entities);
+
+                await db.SaveChangesAsync();
+
+                return ret;
+            }
+        }
     }
 }

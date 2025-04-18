@@ -1,3 +1,4 @@
+using AuthService.Adapters.BackgroundServices;
 using AuthService.Adapters.Database;
 using AuthService.Domain;
 using AuthService.Domain.Logic;
@@ -50,6 +51,8 @@ namespace AuthService
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration?.JwtSettings.Secret))
                     };
                 });
+
+            builder.Services.AddHostedService<InviteExpirerBackgroundService>();
 
             var app = builder.Build();
 

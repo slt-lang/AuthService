@@ -13,5 +13,6 @@ namespace AuthService.Domain.Ports
         Task<bool> InviteExisted(string invite);
         Task<RegistrationResponse?> RegisterUser(RegistrationRequest request);
         Task<CreateInviteLinkResponse> CreateInvite(InviteLinkDto request);
+        Task<int?> DeleteExpiredInvites();
     }
 }
