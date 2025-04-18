@@ -272,6 +272,8 @@ namespace AuthService.Adapters.Database
 
                 await db.SaveChangesAsync();
 
+                await tran.CommitAsync();
+
                 return ret;
             }
         }
