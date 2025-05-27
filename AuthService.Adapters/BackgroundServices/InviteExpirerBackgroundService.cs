@@ -13,12 +13,15 @@ namespace AuthService.Adapters.BackgroundServices
     {
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            using (var scope = serviceProvider.CreateScope())
+            while (!stoppingToken.IsCancellationRequested)
             {
-                var authDb = scope.ServiceProvider.GetRequiredService<IAuthDb>();
-                await authDb.DeleteExpiredInvites();
+                using (var scope = serviceProvider.CreateScope())
+                {
+                    var authDb = scope.ServiceProvider.GetRequiredService<IAuthDb>();
+                    await authDb.DeleteExpiredInvites();
+                }
+                await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
             }
-            await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
         }
     }
 }
